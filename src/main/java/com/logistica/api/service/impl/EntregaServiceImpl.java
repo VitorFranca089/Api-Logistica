@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntregaServiceImpl implements EntregaService {
@@ -25,7 +27,7 @@ public class EntregaServiceImpl implements EntregaService {
     private ViaCepService viaCepService;
 
     @Override
-    public EntregaDTO cadastraEntrega(EntregaDTO entregaDTO) {
+    public EntregaDTO cadastrarEntrega(EntregaDTO entregaDTO) {
         Endereco origemEndereco = this.enderecoRepository.findByCep(entregaDTO.origemCep().cep()).
                 orElseGet(() -> salvarEndereco(entregaDTO.origemCep()));
         Endereco destinoEndereco = this.enderecoRepository.findByCep(entregaDTO.destinoCep().cep()).
@@ -37,13 +39,35 @@ public class EntregaServiceImpl implements EntregaService {
         entrega.setDestino(destinoEndereco);
         entrega.setDataCriacao(LocalDateTime.now());
         this.entregaRepository.save(entrega);
-        return new EntregaDTO(entrega.getStatus(), entrega.getLojaResponsavel(), new EnderecoDTO(entrega.getOrigem()), new EnderecoDTO(entrega.getDestino()), entrega.getDataCriacao());
+        return convertToDto(entrega);
+    }
+
+    @Override
+    public List<EntregaDTO> listarEntregas(){
+         List<Entrega> entregas = (List<Entrega>) this.entregaRepository.findAll();
+         return entregas.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public EntregaDTO detalharEntrega(Integer idEntrega){
+        Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
+        return entrega.map(this::convertToDto).orElse(null);
     }
 
     private Endereco salvarEndereco(EnderecoDTO enderecoDTO) {
         Endereco endereco = this.viaCepService.getEndereco(enderecoDTO.cep());
         if(!enderecoDTO.unidade().isEmpty()) endereco.setUnidade(enderecoDTO.unidade());
         return enderecoRepository.save(endereco);
+    }
+
+    private EntregaDTO convertToDto(Entrega entrega) {
+        return new EntregaDTO(
+                entrega.getStatus(),
+                entrega.getLojaResponsavel(),
+                new EnderecoDTO(entrega.getOrigem()),
+                new EnderecoDTO(entrega.getDestino()),
+                entrega.getDataCriacao()
+        );
     }
 
 }
