@@ -20,8 +20,8 @@ public class Rastreamento {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
+    @JoinColumn(name = "entrega_id", nullable = false)
+    private Entrega entrega;
 
     @Column(name = "descricao_localizacao", nullable = false)
     private String descricaoLocalizacao;

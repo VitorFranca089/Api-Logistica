@@ -1,4 +1,4 @@
-CREATE TABLE pedidos (
+CREATE TABLE entregas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(50) NOT NULL,
     loja_responsavel VARCHAR(100) NOT NULL,

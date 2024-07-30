@@ -12,7 +12,7 @@
 	<artifactId>api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Logistica API</name>
-	<description>API para fazer o monitoramento logistico de um pedido</description>
+	<description>API para fazer o monitoramento logistico de uma entrega</description>
 	<url/>
 	<licenses>
 		<license/>

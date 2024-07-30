@@ -1,14 +1,14 @@
-ALTER TABLE pedidos
-ADD CONSTRAINT fk_pedidos_origem
+ALTER TABLE entregas
+ADD CONSTRAINT fk_entregas_origem
 FOREIGN KEY (origem_id) REFERENCES enderecos(id);
 
-ALTER TABLE pedidos
-ADD CONSTRAINT fk_pedidos_destino
+ALTER TABLE entregas
+ADD CONSTRAINT fk_entregas_destino
 FOREIGN KEY (destino_id) REFERENCES enderecos(id);
 
 ALTER TABLE rastreamento
 ADD CONSTRAINT fk_rastreamento_pedido
-FOREIGN KEY (pedido_id) REFERENCES pedidos(id);
+FOREIGN KEY (entrega_id) REFERENCES entregas(id);
 
 ALTER TABLE rastreamento
 ADD CONSTRAINT fk_rastreamento_endereco
