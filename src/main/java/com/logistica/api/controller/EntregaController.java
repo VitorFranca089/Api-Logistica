@@ -43,4 +43,10 @@ public class EntregaController {
         return ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarEntrega(@PathVariable Integer id){
+        this.entregaService.deletarEntrega(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

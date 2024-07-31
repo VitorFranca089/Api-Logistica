@@ -67,6 +67,12 @@ public class EntregaServiceImpl implements EntregaService {
         return null;
     }
 
+    @Override
+    public void deletarEntrega(Integer idEntrega){
+        Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
+        entrega.ifPresent(e -> this.entregaRepository.delete(e));
+    }
+
     private Endereco salvarEndereco(EnderecoDTO enderecoDTO) {
         Endereco endereco = this.viaCepService.getEndereco(enderecoDTO.cep());
         if(!enderecoDTO.unidade().isEmpty()) endereco.setUnidade(enderecoDTO.unidade());

@@ -10,4 +10,5 @@ public interface EntregaService {
     List<EntregaDTO> listarEntregas();
     EntregaDTO detalharEntrega(Integer idEntrega);
     EntregaDTO atualizarStatusEntrega(Integer idEntrega, AtualizarStatusDTO statusDTO);
+    void deletarEntrega(Integer idEntrega);
 }
