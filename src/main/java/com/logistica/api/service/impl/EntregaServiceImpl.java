@@ -1,5 +1,6 @@
 package com.logistica.api.service.impl;
 
+import com.logistica.api.dto.AtualizarStatusDTO;
 import com.logistica.api.dto.EnderecoDTO;
 import com.logistica.api.dto.EntregaDTO;
 import com.logistica.api.model.Endereco;
@@ -52,6 +53,18 @@ public class EntregaServiceImpl implements EntregaService {
     public EntregaDTO detalharEntrega(Integer idEntrega){
         Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
         return entrega.map(this::convertToDto).orElse(null);
+    }
+
+    @Override
+    public EntregaDTO atualizarStatusEntrega(Integer idEntrega, AtualizarStatusDTO statusDTO){
+        Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
+        if(entrega.isPresent()){
+            Entrega entregaAtualizada = entrega.get();
+            entregaAtualizada.setStatus(statusDTO.status());
+            this.entregaRepository.save(entregaAtualizada);
+            return this.convertToDto(entregaAtualizada);
+        }
+        return null;
     }
 
     private Endereco salvarEndereco(EnderecoDTO enderecoDTO) {
