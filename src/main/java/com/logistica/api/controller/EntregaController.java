@@ -3,7 +3,6 @@ package com.logistica.api.controller;
 import com.logistica.api.dto.AtualizarStatusDTO;
 import com.logistica.api.dto.EntregaDTO;
 import com.logistica.api.service.EntregaService;
-import feign.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

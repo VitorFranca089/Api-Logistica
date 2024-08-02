@@ -8,7 +8,6 @@ import com.logistica.api.model.Entrega;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
 import com.logistica.api.service.EntregaService;
-import com.logistica.api.service.ViaCepService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,24 +20,20 @@ public class EntregaServiceImpl implements EntregaService {
 
     @Autowired
     private EntregaRepository entregaRepository;
+
     @Autowired
     private EnderecoRepository enderecoRepository;
 
     @Autowired
-    private ViaCepService viaCepService;
+    private EnderecoUtils enderecoUtils;
 
     @Override
     public EntregaDTO cadastrarEntrega(EntregaDTO entregaDTO) {
         Endereco origemEndereco = this.enderecoRepository.findByCep(entregaDTO.origemCep().cep()).
-                orElseGet(() -> salvarEndereco(entregaDTO.origemCep()));
+                orElseGet(() -> enderecoUtils.obterOuCriarEndereco(entregaDTO.origemCep()));
         Endereco destinoEndereco = this.enderecoRepository.findByCep(entregaDTO.destinoCep().cep()).
-                orElseGet(() -> salvarEndereco(entregaDTO.destinoCep()));
-        Entrega entrega = new Entrega();
-        entrega.setStatus(entregaDTO.status());
-        entrega.setLojaResponsavel(entregaDTO.lojaResponsavel());
-        entrega.setOrigem(origemEndereco);
-        entrega.setDestino(destinoEndereco);
-        entrega.setDataCriacao(LocalDateTime.now());
+                orElseGet(() -> enderecoUtils.obterOuCriarEndereco(entregaDTO.destinoCep()));
+        Entrega entrega = criarEntrega(entregaDTO, origemEndereco, destinoEndereco);
         this.entregaRepository.save(entrega);
         return convertToDto(entrega);
     }
@@ -73,12 +68,6 @@ public class EntregaServiceImpl implements EntregaService {
         entrega.ifPresent(e -> this.entregaRepository.delete(e));
     }
 
-    private Endereco salvarEndereco(EnderecoDTO enderecoDTO) {
-        Endereco endereco = this.viaCepService.getEndereco(enderecoDTO.cep());
-        if(!enderecoDTO.unidade().isEmpty()) endereco.setUnidade(enderecoDTO.unidade());
-        return enderecoRepository.save(endereco);
-    }
-
     private EntregaDTO convertToDto(Entrega entrega) {
         return new EntregaDTO(
                 entrega.getStatus(),
@@ -87,6 +76,16 @@ public class EntregaServiceImpl implements EntregaService {
                 new EnderecoDTO(entrega.getDestino()),
                 entrega.getDataCriacao()
         );
+    }
+
+    private Entrega criarEntrega(EntregaDTO entregaDTO, Endereco origemEndereco, Endereco destinoEndereco) {
+        Entrega entrega = new Entrega();
+        entrega.setStatus(entregaDTO.status());
+        entrega.setLojaResponsavel(entregaDTO.lojaResponsavel());
+        entrega.setOrigem(origemEndereco);
+        entrega.setDestino(destinoEndereco);
+        entrega.setDataCriacao(LocalDateTime.now());
+        return entrega;
     }
 
 }
