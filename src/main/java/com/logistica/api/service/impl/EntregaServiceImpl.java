@@ -29,10 +29,10 @@ public class EntregaServiceImpl implements EntregaService {
 
     @Override
     public EntregaDTO cadastrarEntrega(EntregaDTO entregaDTO) {
-        Endereco origemEndereco = this.enderecoRepository.findByCep(entregaDTO.origemCep().cep()).
-                orElseGet(() -> enderecoUtils.obterOuCriarEndereco(entregaDTO.origemCep()));
-        Endereco destinoEndereco = this.enderecoRepository.findByCep(entregaDTO.destinoCep().cep()).
-                orElseGet(() -> enderecoUtils.obterOuCriarEndereco(entregaDTO.destinoCep()));
+        Endereco origemEndereco = this.enderecoRepository.findByCepAndUnidade(entregaDTO.origemCep().cep(), entregaDTO.origemCep().unidade()).
+                orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.origemCep()));
+        Endereco destinoEndereco = this.enderecoRepository.findByCepAndUnidade(entregaDTO.destinoCep().cep(), entregaDTO.destinoCep().unidade()).
+                orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.destinoCep()));
         Entrega entrega = criarEntrega(entregaDTO, origemEndereco, destinoEndereco);
         this.entregaRepository.save(entrega);
         return convertToDto(entrega);

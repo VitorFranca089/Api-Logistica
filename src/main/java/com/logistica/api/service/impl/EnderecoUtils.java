@@ -16,7 +16,7 @@ public class EnderecoUtils {
     @Autowired
     private ViaCepService viaCepService;
 
-    public Endereco obterOuCriarEndereco(EnderecoDTO enderecoDTO) {
+    public Endereco criarEndereco(EnderecoDTO enderecoDTO) {
         Endereco endereco = this.viaCepService.getEndereco(enderecoDTO.cep());
         if(!enderecoDTO.unidade().isEmpty()) endereco.setUnidade(enderecoDTO.unidade());
         return enderecoRepository.save(endereco);
