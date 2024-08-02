@@ -7,7 +7,7 @@ ADD CONSTRAINT fk_entregas_destino
 FOREIGN KEY (destino_id) REFERENCES enderecos(id);
 
 ALTER TABLE rastreamento
-ADD CONSTRAINT fk_rastreamento_pedido
+ADD CONSTRAINT fk_rastreamento_entrega
 FOREIGN KEY (entrega_id) REFERENCES entregas(id);
 
 ALTER TABLE rastreamento
