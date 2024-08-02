@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,9 +37,18 @@ public class RastreamentoServiceImpl implements RastreamentoService {
         if(entrega.isPresent()){
             Endereco endereco = this.enderecoRepository.findByCepAndUnidade(rastreamentoDTO.endereco().cep(), rastreamentoDTO.endereco().unidade()).
                     orElseGet(() -> enderecoUtils.criarEndereco(rastreamentoDTO.endereco()));
-            Rastreamento rastreamento =criarRastreamento(entrega.get(), rastreamentoDTO, endereco);
+            Rastreamento rastreamento = criarRastreamento(entrega.get(), rastreamentoDTO, endereco);
             this.rastreamentoRepository.save(rastreamento);
             return new RastreamentoDTO(rastreamento.getDescricaoLocalizacao(), new EnderecoDTO(endereco), rastreamento.getDataHora());
+        }
+        return null;
+    }
+
+    public List<RastreamentoDTO> listarRastreamento(Integer idEntrega){
+        Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
+        if(entrega.isPresent()){
+            List<Rastreamento> rastreamento = this.rastreamentoRepository.findAllByEntrega(entrega.get());
+            return rastreamento.stream().map(this::convertToDto).toList();
         }
         return null;
     }
@@ -50,6 +60,14 @@ public class RastreamentoServiceImpl implements RastreamentoService {
         rastreamento.setEndereco(endereco);
         rastreamento.setDataHora(LocalDateTime.now());
         return rastreamento;
+    }
+
+    private RastreamentoDTO convertToDto(Rastreamento rastreamento){
+        return new RastreamentoDTO(
+                rastreamento.getDescricaoLocalizacao(),
+                new EnderecoDTO(rastreamento.getEndereco()),
+                rastreamento.getDataHora()
+        );
     }
 
 }
