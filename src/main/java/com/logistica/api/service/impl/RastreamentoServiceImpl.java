@@ -44,6 +44,7 @@ public class RastreamentoServiceImpl implements RastreamentoService {
         return null;
     }
 
+    @Override
     public List<RastreamentoDTO> listarRastreamento(Integer idEntrega){
         Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
         if(entrega.isPresent()){
