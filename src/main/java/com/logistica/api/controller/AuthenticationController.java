@@ -2,6 +2,8 @@ package com.logistica.api.controller;
 
 import com.logistica.api.dto.AuthenticationDTO;
 import com.logistica.api.dto.RegisterDTO;
+import com.logistica.api.dto.TokenDTO;
+import com.logistica.api.infra.security.TokenService;
 import com.logistica.api.model.Usuario;
 import com.logistica.api.repository.UsuarioRepository;
 import jakarta.validation.Valid;
@@ -25,6 +27,9 @@ public class AuthenticationController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO authenticationDTO){
         var usernamePassword = new UsernamePasswordAuthenticationToken(
@@ -33,7 +38,9 @@ public class AuthenticationController {
         );
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = this.tokenService.generateToken((Usuario) auth.getPrincipal());
+
+        return ResponseEntity.ok(new TokenDTO(token));
     }
 
     @PostMapping("/register")
