@@ -1,5 +1,6 @@
 package com.logistica.api.model;
 
+import com.logistica.api.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

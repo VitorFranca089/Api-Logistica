@@ -1,4 +1,4 @@
-package com.logistica.api.model;
+package com.logistica.api.model.enums;
 
 public enum Status {
     ENTREGUE,

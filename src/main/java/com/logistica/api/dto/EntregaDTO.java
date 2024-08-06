@@ -1,6 +1,6 @@
 package com.logistica.api.dto;
 
-import com.logistica.api.model.Status;
+import com.logistica.api.model.enums.Status;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
