@@ -1,5 +1,6 @@
 package com.logistica.api.model;
 
+import com.logistica.api.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class Usuario {
 
     private String senha;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 }
