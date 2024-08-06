@@ -37,4 +37,8 @@ public class Entrega {
     @Column(name = "data_criacao")
     private LocalDateTime dataCriacao;
 
+    @ManyToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
 }
