@@ -1,4 +1,4 @@
-package com.logistica.api.service.impl;
+package com.logistica.api.util;
 
 import com.logistica.api.dto.EnderecoDTO;
 import com.logistica.api.exception.CepNotFoundException;

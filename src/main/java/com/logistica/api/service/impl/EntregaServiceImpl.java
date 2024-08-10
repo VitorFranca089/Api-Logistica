@@ -8,6 +8,7 @@ import com.logistica.api.model.Entrega;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
 import com.logistica.api.service.EntregaService;
+import com.logistica.api.util.EnderecoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

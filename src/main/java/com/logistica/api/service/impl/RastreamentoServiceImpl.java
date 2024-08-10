@@ -9,6 +9,7 @@ import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
 import com.logistica.api.repository.RastreamentoRepository;
 import com.logistica.api.service.RastreamentoService;
+import com.logistica.api.util.EnderecoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
