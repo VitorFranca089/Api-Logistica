@@ -44,7 +44,7 @@ public class EntregaServiceImpl implements EntregaService {
                 orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.destinoCep()));
         Entrega entrega = criarEntrega(entregaDTO, origemEndereco, destinoEndereco, usuario);
         this.entregaRepository.save(entrega);
-        return convertToDto1(entrega);
+        return convertToDto(entrega);
     }
 
     @Override
@@ -78,19 +78,6 @@ public class EntregaServiceImpl implements EntregaService {
     }
 
     private EntregaResponse convertToDto(Entrega entrega) {
-        Usuario u = entrega.getUsuario();
-        return new EntregaResponse(
-                entrega.getId(),
-                entrega.getStatus(),
-                entrega.getLojaResponsavel(),
-                new EnderecoDTO(entrega.getOrigem()),
-                new EnderecoDTO(entrega.getDestino()),
-                entrega.getDataCriacao(),
-                new UsuarioResponse(u.getId(), u.getEmail(), u.getRole())
-        );
-    }
-
-    private EntregaResponse convertToDto1(Entrega entrega) {
         Usuario u = entrega.getUsuario();
         return new EntregaResponse(
                 entrega.getId(),
