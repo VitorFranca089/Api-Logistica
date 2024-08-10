@@ -5,8 +5,10 @@ import com.logistica.api.dto.EnderecoDTO;
 import com.logistica.api.dto.EntregaDTO;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.model.Entrega;
+import com.logistica.api.model.Usuario;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
+import com.logistica.api.service.AuthenticationService;
 import com.logistica.api.service.EntregaService;
 import com.logistica.api.util.EnderecoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +28,19 @@ public class EntregaServiceImpl implements EntregaService {
     private EnderecoRepository enderecoRepository;
 
     @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
     private EnderecoUtils enderecoUtils;
 
     @Override
     public EntregaDTO cadastrarEntrega(EntregaDTO entregaDTO) {
+        Usuario usuario = this.authenticationService.registerCliente(entregaDTO.emailUsuario());
         Endereco origemEndereco = this.enderecoRepository.findByCepAndUnidade(entregaDTO.origemCep().cep(), entregaDTO.origemCep().unidade()).
                 orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.origemCep()));
         Endereco destinoEndereco = this.enderecoRepository.findByCepAndUnidade(entregaDTO.destinoCep().cep(), entregaDTO.destinoCep().unidade()).
                 orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.destinoCep()));
-        Entrega entrega = criarEntrega(entregaDTO, origemEndereco, destinoEndereco);
+        Entrega entrega = criarEntrega(entregaDTO, origemEndereco, destinoEndereco, usuario);
         this.entregaRepository.save(entrega);
         return convertToDto(entrega);
     }
@@ -75,17 +81,19 @@ public class EntregaServiceImpl implements EntregaService {
                 entrega.getLojaResponsavel(),
                 new EnderecoDTO(entrega.getOrigem()),
                 new EnderecoDTO(entrega.getDestino()),
-                entrega.getDataCriacao()
+                entrega.getDataCriacao(),
+                entrega.getUsuario().getEmail()
         );
     }
 
-    private Entrega criarEntrega(EntregaDTO entregaDTO, Endereco origemEndereco, Endereco destinoEndereco) {
+    private Entrega criarEntrega(EntregaDTO entregaDTO, Endereco origemEndereco, Endereco destinoEndereco, Usuario usuario) {
         Entrega entrega = new Entrega();
         entrega.setStatus(entregaDTO.status());
         entrega.setLojaResponsavel(entregaDTO.lojaResponsavel());
         entrega.setOrigem(origemEndereco);
         entrega.setDestino(destinoEndereco);
         entrega.setDataCriacao(LocalDateTime.now());
+        entrega.setUsuario(usuario);
         return entrega;
     }
 

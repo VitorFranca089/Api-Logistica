@@ -7,7 +7,6 @@ public record AuthenticationDTO(
         @NotBlank
         @Email
         String email,
-        @NotBlank
         String senha
 ) {
 }

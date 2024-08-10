@@ -14,6 +14,7 @@ public record EntregaDTO(
         EnderecoDTO origemCep,
         @Valid
         EnderecoDTO destinoCep,
-        LocalDateTime dataCriacao
+        LocalDateTime dataCriacao,
+        String emailUsuario
 ) {
 }
