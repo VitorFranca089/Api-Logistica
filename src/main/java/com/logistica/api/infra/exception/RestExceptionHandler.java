@@ -1,6 +1,5 @@
-package com.logistica.api.infra;
+package com.logistica.api.infra.exception;
 
-import com.logistica.api.exception.CepNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

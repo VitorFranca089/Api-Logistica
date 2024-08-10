@@ -1,7 +1,7 @@
 package com.logistica.api.util;
 
 import com.logistica.api.dto.EnderecoDTO;
-import com.logistica.api.exception.CepNotFoundException;
+import com.logistica.api.infra.exception.CepNotFoundException;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.service.ViaCepService;

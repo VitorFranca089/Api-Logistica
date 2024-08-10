@@ -1,4 +1,4 @@
-package com.logistica.api.infra;
+package com.logistica.api.infra.exception;
 
 import lombok.Getter;
 import lombok.Setter;
