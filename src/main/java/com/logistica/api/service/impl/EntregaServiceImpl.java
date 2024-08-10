@@ -3,6 +3,8 @@ package com.logistica.api.service.impl;
 import com.logistica.api.dto.AtualizarStatusDTO;
 import com.logistica.api.dto.EnderecoDTO;
 import com.logistica.api.dto.EntregaDTO;
+import com.logistica.api.dto.response.EntregaResponse;
+import com.logistica.api.dto.response.UsuarioResponse;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.model.Entrega;
 import com.logistica.api.model.Usuario;
@@ -34,7 +36,7 @@ public class EntregaServiceImpl implements EntregaService {
     private EnderecoUtils enderecoUtils;
 
     @Override
-    public EntregaDTO cadastrarEntrega(EntregaDTO entregaDTO) {
+    public EntregaResponse cadastrarEntrega(EntregaDTO entregaDTO) {
         Usuario usuario = this.authenticationService.registerCliente(entregaDTO.emailUsuario());
         Endereco origemEndereco = this.enderecoRepository.findByCepAndUnidade(entregaDTO.origemCep().cep(), entregaDTO.origemCep().unidade()).
                 orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.origemCep()));
@@ -46,19 +48,19 @@ public class EntregaServiceImpl implements EntregaService {
     }
 
     @Override
-    public List<EntregaDTO> listarEntregas(){
+    public List<EntregaResponse> listarEntregas(){
          List<Entrega> entregas = (List<Entrega>) this.entregaRepository.findAll();
          return entregas.stream().map(this::convertToDto).toList();
     }
 
     @Override
-    public EntregaDTO detalharEntrega(Integer idEntrega){
+    public EntregaResponse detalharEntrega(Integer idEntrega){
         Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
         return entrega.map(this::convertToDto).orElse(null);
     }
 
     @Override
-    public EntregaDTO atualizarStatusEntrega(Integer idEntrega, AtualizarStatusDTO statusDTO){
+    public EntregaResponse atualizarStatusEntrega(Integer idEntrega, AtualizarStatusDTO statusDTO){
         Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
         if(entrega.isPresent()){
             Entrega entregaAtualizada = entrega.get();
@@ -75,14 +77,16 @@ public class EntregaServiceImpl implements EntregaService {
         entrega.ifPresent(e -> this.entregaRepository.delete(e));
     }
 
-    private EntregaDTO convertToDto(Entrega entrega) {
-        return new EntregaDTO(
+    private EntregaResponse convertToDto(Entrega entrega) {
+        Usuario u = entrega.getUsuario();
+        return new EntregaResponse(
+                entrega.getId(),
                 entrega.getStatus(),
                 entrega.getLojaResponsavel(),
                 new EnderecoDTO(entrega.getOrigem()),
                 new EnderecoDTO(entrega.getDestino()),
                 entrega.getDataCriacao(),
-                entrega.getUsuario().getEmail()
+                new UsuarioResponse(u.getId(), u.getEmail(), u.getRole())
         );
     }
 
