@@ -3,6 +3,8 @@ package com.logistica.api.service.impl;
 import com.logistica.api.dto.AtualizarStatusDTO;
 import com.logistica.api.dto.EnderecoDTO;
 import com.logistica.api.dto.EntregaDTO;
+import com.logistica.api.dto.response.EntregaResponse;
+import com.logistica.api.dto.response.UsuarioResponse;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.model.Entrega;
 import com.logistica.api.model.Usuario;
@@ -34,7 +36,7 @@ public class EntregaServiceImpl implements EntregaService {
     private EnderecoUtils enderecoUtils;
 
     @Override
-    public EntregaDTO cadastrarEntrega(EntregaDTO entregaDTO) {
+    public EntregaResponse cadastrarEntrega(EntregaDTO entregaDTO) {
         Usuario usuario = this.authenticationService.registerCliente(entregaDTO.emailUsuario());
         Endereco origemEndereco = this.enderecoRepository.findByCepAndUnidade(entregaDTO.origemCep().cep(), entregaDTO.origemCep().unidade()).
                 orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.origemCep()));
@@ -42,7 +44,7 @@ public class EntregaServiceImpl implements EntregaService {
                 orElseGet(() -> enderecoUtils.criarEndereco(entregaDTO.destinoCep()));
         Entrega entrega = criarEntrega(entregaDTO, origemEndereco, destinoEndereco, usuario);
         this.entregaRepository.save(entrega);
-        return convertToDto(entrega);
+        return convertToDto1(entrega);
     }
 
     @Override
@@ -83,6 +85,19 @@ public class EntregaServiceImpl implements EntregaService {
                 new EnderecoDTO(entrega.getDestino()),
                 entrega.getDataCriacao(),
                 entrega.getUsuario().getEmail()
+        );
+    }
+
+    private EntregaResponse convertToDto1(Entrega entrega) {
+        Usuario u = entrega.getUsuario();
+        return new EntregaResponse(
+                entrega.getId(),
+                entrega.getStatus(),
+                entrega.getLojaResponsavel(),
+                new EnderecoDTO(entrega.getOrigem()),
+                new EnderecoDTO(entrega.getDestino()),
+                entrega.getDataCriacao(),
+                new UsuarioResponse(u.getId(), u.getEmail(), u.getRole())
         );
     }
 

@@ -2,6 +2,7 @@ package com.logistica.api.controller;
 
 import com.logistica.api.dto.AtualizarStatusDTO;
 import com.logistica.api.dto.EntregaDTO;
+import com.logistica.api.dto.response.EntregaResponse;
 import com.logistica.api.service.EntregaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class EntregaController {
     private EntregaService entregaService;
 
     @PostMapping("/cadastro")
-    public ResponseEntity<EntregaDTO> cadastrarEntrega(@RequestBody @Valid EntregaDTO entregaDTO){
-        EntregaDTO response = this.entregaService.cadastrarEntrega(entregaDTO);
+    public ResponseEntity<EntregaResponse> cadastrarEntrega(@RequestBody @Valid EntregaDTO entregaDTO){
+        EntregaResponse response = this.entregaService.cadastrarEntrega(entregaDTO);
         return ResponseEntity.ok(response);
     }
 
