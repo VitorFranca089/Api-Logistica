@@ -5,11 +5,13 @@ import com.logistica.api.dto.RastreamentoDTO;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.model.Entrega;
 import com.logistica.api.model.Rastreamento;
+import com.logistica.api.model.Usuario;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
 import com.logistica.api.repository.RastreamentoRepository;
 import com.logistica.api.service.RastreamentoService;
 import com.logistica.api.util.EnderecoUtils;
+import com.logistica.api.util.UsuarioUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,9 @@ public class RastreamentoServiceImpl implements RastreamentoService {
     @Autowired
     private EnderecoUtils enderecoUtils;
 
+    @Autowired
+    private UsuarioUtils usuarioUtils;
+
     @Override
     public RastreamentoDTO registrarRastreamento(Integer idEntrega, RastreamentoDTO rastreamentoDTO){
         Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
@@ -46,9 +51,9 @@ public class RastreamentoServiceImpl implements RastreamentoService {
     }
 
     @Override
-    public List<RastreamentoDTO> listarRastreamento(Integer idEntrega){
+    public List<RastreamentoDTO> listarRastreamento(Integer idEntrega, Usuario usuario){
         Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
-        if(entrega.isPresent()){
+        if(entrega.isPresent() && usuarioUtils.usuarioPodeAcessarEntrega(entrega.get(), usuario)){
             List<Rastreamento> rastreamento = this.rastreamentoRepository.findAllByEntrega(entrega.get());
             return rastreamento.stream().map(this::convertToDto).toList();
         }

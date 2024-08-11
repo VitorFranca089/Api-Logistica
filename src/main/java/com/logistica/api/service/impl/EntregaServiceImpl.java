@@ -8,12 +8,12 @@ import com.logistica.api.dto.response.UsuarioResponse;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.model.Entrega;
 import com.logistica.api.model.Usuario;
-import com.logistica.api.model.enums.UserRole;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
 import com.logistica.api.service.AuthenticationService;
 import com.logistica.api.service.EntregaService;
 import com.logistica.api.util.EnderecoUtils;
+import com.logistica.api.util.UsuarioUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +36,9 @@ public class EntregaServiceImpl implements EntregaService {
     @Autowired
     private EnderecoUtils enderecoUtils;
 
+    @Autowired
+    private UsuarioUtils usuarioUtils;
+
     @Override
     public EntregaResponse cadastrarEntrega(EntregaDTO entregaDTO) {
         Usuario usuario = this.authenticationService.registerCliente(entregaDTO.emailUsuario());
@@ -57,10 +60,7 @@ public class EntregaServiceImpl implements EntregaService {
     @Override
     public EntregaResponse detalharEntrega(Integer idEntrega, Usuario usuario){
         return entregaRepository.findById(idEntrega)
-                .filter(entrega ->
-                        usuario.getRole() == UserRole.ADMIN ||
-                        usuario.getRole() == UserRole.FUNCIONARIO ||
-                        (usuario.getRole() == UserRole.CLIENTE && usuario.getId().equals(entrega.getUsuario().getId())))
+                .filter(entrega -> usuarioUtils.usuarioPodeAcessarEntrega(entrega, usuario))
                 .map(this::convertToDto)
                 .orElse(null);
     }
