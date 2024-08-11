@@ -8,6 +8,7 @@ import com.logistica.api.dto.response.UsuarioResponse;
 import com.logistica.api.model.Endereco;
 import com.logistica.api.model.Entrega;
 import com.logistica.api.model.Usuario;
+import com.logistica.api.model.enums.UserRole;
 import com.logistica.api.repository.EnderecoRepository;
 import com.logistica.api.repository.EntregaRepository;
 import com.logistica.api.service.AuthenticationService;
@@ -54,9 +55,14 @@ public class EntregaServiceImpl implements EntregaService {
     }
 
     @Override
-    public EntregaResponse detalharEntrega(Integer idEntrega){
-        Optional<Entrega> entrega = this.entregaRepository.findById(idEntrega);
-        return entrega.map(this::convertToDto).orElse(null);
+    public EntregaResponse detalharEntrega(Integer idEntrega, Usuario usuario){
+        return entregaRepository.findById(idEntrega)
+                .filter(entrega ->
+                        usuario.getRole() == UserRole.ADMIN ||
+                        usuario.getRole() == UserRole.FUNCIONARIO ||
+                        (usuario.getRole() == UserRole.CLIENTE && usuario.getId().equals(entrega.getUsuario().getId())))
+                .map(this::convertToDto)
+                .orElse(null);
     }
 
     @Override

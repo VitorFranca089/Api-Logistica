@@ -3,10 +3,12 @@ package com.logistica.api.controller;
 import com.logistica.api.dto.AtualizarStatusDTO;
 import com.logistica.api.dto.EntregaDTO;
 import com.logistica.api.dto.response.EntregaResponse;
+import com.logistica.api.model.Usuario;
 import com.logistica.api.service.EntregaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +33,8 @@ public class EntregaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntregaResponse> detalharEntrega(@PathVariable Integer id){
-        EntregaResponse response = this.entregaService.detalharEntrega(id);
+    public ResponseEntity<EntregaResponse> detalharEntrega(@PathVariable Integer id, @AuthenticationPrincipal Usuario usuarioAuth){
+        EntregaResponse response = this.entregaService.detalharEntrega(id, usuarioAuth);
         if(response != null) return ResponseEntity.ok(response);
         return ResponseEntity.notFound().build();
     }
