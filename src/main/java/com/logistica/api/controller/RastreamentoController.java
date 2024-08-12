@@ -1,6 +1,7 @@
 package com.logistica.api.controller;
 
 import com.logistica.api.dto.RastreamentoDTO;
+import com.logistica.api.dto.response.RastreamentoResponse;
 import com.logistica.api.model.Usuario;
 import com.logistica.api.service.RastreamentoService;
 import jakarta.validation.Valid;
@@ -19,15 +20,15 @@ public class RastreamentoController {
     private RastreamentoService rastreamentoService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<RastreamentoDTO> registrarRastreamento(@PathVariable Integer id, @RequestBody @Valid RastreamentoDTO rastreamentoDTO){
-        RastreamentoDTO response = this.rastreamentoService.registrarRastreamento(id, rastreamentoDTO);
+    public ResponseEntity<RastreamentoResponse> registrarRastreamento(@PathVariable Integer id, @RequestBody @Valid RastreamentoDTO rastreamentoDTO){
+        RastreamentoResponse response = this.rastreamentoService.registrarRastreamento(id, rastreamentoDTO);
         if(response != null) return ResponseEntity.ok(response);
         return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<RastreamentoDTO>> listarRastreamento(@PathVariable Integer id, @AuthenticationPrincipal Usuario usuarioAuth){
-        List<RastreamentoDTO> response = this.rastreamentoService.listarRastreamento(id, usuarioAuth);
+    public ResponseEntity<List<RastreamentoResponse>> listarRastreamento(@PathVariable Integer id, @AuthenticationPrincipal Usuario usuarioAuth){
+        List<RastreamentoResponse> response = this.rastreamentoService.listarRastreamento(id, usuarioAuth);
         if(response != null) return ResponseEntity.ok(response);
         return ResponseEntity.notFound().build();
     }

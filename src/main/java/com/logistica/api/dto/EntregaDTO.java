@@ -2,9 +2,8 @@ package com.logistica.api.dto;
 
 import com.logistica.api.model.enums.Status;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
-import java.time.LocalDateTime;
 
 public record EntregaDTO(
         Status status,
@@ -14,7 +13,7 @@ public record EntregaDTO(
         EnderecoDTO origemCep,
         @Valid
         EnderecoDTO destinoCep,
-        LocalDateTime dataCriacao,
+        @Email
         String emailUsuario
 ) {
 }
